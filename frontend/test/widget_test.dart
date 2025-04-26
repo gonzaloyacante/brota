@@ -7,24 +7,38 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:frontend/main.dart';
+import 'package:brota/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('Brota app test de navegación básica', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verifica que estamos en la pantalla de inicio
+    expect(find.text('Inicio'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Verifica que existe la barra de navegación
+    expect(find.byType(BottomNavigationBar), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verifica que existen los tres items de navegación
+    expect(find.byIcon(Icons.home), findsOneWidget);
+    expect(find.byIcon(Icons.local_florist), findsOneWidget);
+    expect(find.byIcon(Icons.settings), findsOneWidget);
+
+    // Navega al catálogo
+    await tester.tap(find.byIcon(Icons.local_florist));
+    await tester.pumpAndSettle();
+    expect(find.text('Catálogo'), findsOneWidget);
+
+    // Navega a configuración
+    await tester.tap(find.byIcon(Icons.settings));
+    await tester.pumpAndSettle();
+    expect(find.text('Configuración'), findsOneWidget);
+
+    // Verifica elementos de la pantalla de configuración
+    expect(find.text('Tema'), findsOneWidget);
+    expect(find.text('Idioma'), findsOneWidget);
   });
 }
